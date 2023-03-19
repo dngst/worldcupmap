@@ -1,0 +1,42 @@
+body {
+  font-family: sans-serif;
+}
+
+svg {
+  display: block;
+  margin: auto;
+}
+
+#title {
+  font-size: 3em;
+  text-align: center;
+}
+
+#attendance{
+  font-weight: bold;
+}
+
+.tooltip {
+  opacity: 0;
+  position: absolute;
+  font-size: 0.75em;
+  padding: 0.6em 1em;
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.tooltip:before {
+  content: '';
+}
+
+.dot {
+  fill: skyblue;
+  stroke: black;
+  stroke-width: 0.5;
+}
+
+.dot:hover {
+  fill: #FFFFFF;
+}
