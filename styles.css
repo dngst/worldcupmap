@@ -32,11 +32,12 @@ svg {
 }
 
 .dot {
-  fill: skyblue;
+  fill: cornflowerblue;
   stroke: black;
   stroke-width: 0.5;
 }
 
 .dot:hover {
-  fill: #FFFFFF;
+  fill: brown;
+  r: 7;
 }
