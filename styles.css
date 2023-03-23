@@ -12,19 +12,22 @@ svg {
   text-align: center;
 }
 
-#attendance {
-  font-weight: bold;
+.teams {
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-bottom: 0.2em;
 }
 
 .tooltip {
   opacity: 0;
   position: absolute;
-  font-size: 0.75em;
+  font-size: 0.9em;
   padding: 0.6em 1em;
   background: #FFFFFF;
   border: 1px solid #DDDDDD;
   z-index: 10;
   pointer-events: none;
+  line-height: 1.4em;
 }
 
 .tooltip:before {
@@ -38,6 +41,6 @@ svg {
 }
 
 .dot:hover {
-  fill: brown;
+  fill: maroon;
   r: 7;
 }

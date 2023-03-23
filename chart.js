@@ -59,7 +59,7 @@ async function drawChart() {
       .attr("cx", d => xScale(xAccessor(d)))
       .attr("cy", dimensions.boundedHeight)
       .attr("r", 5)
-      .transition().duration(5000)
+      .transition().duration(4000)
         .attr("cy", d => yScale(yAccessor(d)))
 
   // draw peripherals
