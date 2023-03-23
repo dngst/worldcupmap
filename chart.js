@@ -86,7 +86,7 @@ async function drawChart() {
     tooltip.select("#teams")
       .text(`${d.team1} vs ${d.team2} (${d.goals})`)
     tooltip.select("#attendance")
-      .text(`Attendance: ${d.attendance}`)
+      .text(`Attendance: ${yAccessor(d).toLocaleString()}`)
     tooltip.select("#year")
       .text(`Year: ${d.year}`)
     tooltip.select("#stage")
