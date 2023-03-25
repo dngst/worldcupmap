@@ -1,12 +1,12 @@
 async function drawChart() {
   // access data
   const dataset = await d3.tsv("world_cup_geo.tsv")
+  const world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json")
 
-  const yAccessor = d => +d.attendance
-  const xAccessor = d => d.year
+  attendanceAccessor = d => +d.attendance
 
   // create chart dimensions
-  const width = 900
+  const width = 1050
   let dimensions = {
     width: width,
     height: width * 0.6,
@@ -14,7 +14,7 @@ async function drawChart() {
       top: 20,
       right: 20,
       bottom: 50,
-      left: 60
+      left: 50
     }
   }
 
@@ -39,43 +39,32 @@ async function drawChart() {
     }px)`)
 
   // create scales
-  const yScale = d3.scaleLinear()
-    .domain(d3.extent(dataset, yAccessor))
-    .range([dimensions.boundedHeight, 0])
-    .nice()
-
-  const xScale = d3.scaleLinear()
-    .domain(d3.extent(dataset, xAccessor))
-    .range([0, dimensions.boundedWidth])
+  const attendanceScale = d3.scaleLinear()
+    .domain(d3.extent(dataset, attendanceAccessor))
+    .range([3, 30])
 
   // draw data
-  const dots = bounds.selectAll("circle")
+  const projection = d3.geoMercator()
+    .scale(200)
+    .translate([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2]);
+  const path = d3.geoPath()
+    .projection(projection)
+  const map = bounds.selectAll("path")
+    .data(topojson.feature(world, world.objects.countries).features)
+    .enter().append("path")
+      .attr("d", path)
+      .attr("class", "country")
+
+  bounds.selectAll("circle")
     .data(dataset)
     .enter().append("circle")
+      .attr("cx", d => projection([d.long, d.lat])[0])
+      .attr("cy", d => projection([d.long, d.lat])[1])
       .on("mouseenter", onMouseEnter)
       .on("mousemove", onMouseMove)
       .on("mouseleave", onMouseLeave)
       .attr("class", "dot")
-      .attr("cx", d => xScale(xAccessor(d)))
-      .attr("cy", dimensions.boundedHeight)
-      .attr("r", 5)
-      .transition().duration(4000)
-        .attr("cy", d => yScale(yAccessor(d)))
-
-  // draw peripherals
-  const xAxisGenerator = d3.axisBottom()
-    .scale(xScale)
-      .tickFormat(d3.format("d"))
-  const xAxis = bounds.append("g")
-    .call(xAxisGenerator)
-      .attr("id", "x-axis")
-      .style("transform", `translateY(${dimensions.boundedHeight}px)`)
-
-  const yAxisGenerator = d3.axisLeft()
-    .scale(yScale)
-  const yAxis = bounds.append("g")
-    .call(yAxisGenerator)
-      .attr("id", "y-axis")
+      .attr("r", d => attendanceScale(attendanceAccessor(d)))
 
   // set up interactions
   const tooltip = d3.select("#tooltip")
@@ -86,11 +75,11 @@ async function drawChart() {
     tooltip.select("#teams")
       .text(`${d.team1} vs ${d.team2} (${d.goals})`)
     tooltip.select("#attendance")
-      .text(`Attendance: ${yAccessor(d).toLocaleString()}`)
+      .text(`Attendance: ${attendanceAccessor(d).toLocaleString()}`)
     tooltip.select("#year")
       .text(`Year: ${d.year}`)
-    tooltip.select("#stage")
-      .text(`${d.stage}`)
+    tooltip.select("#stadium")
+      .text(`Stadium: ${d.stadium}`)
     tooltip.style("opacity", 0.9)
   }
 

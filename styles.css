@@ -7,9 +7,10 @@ svg {
   margin: auto;
 }
 
+
 #title {
-  font-size: 3em;
   text-align: center;
+  font-size: 3em;
 }
 
 .teams {
@@ -35,12 +36,17 @@ svg {
 }
 
 .dot {
-  fill: cornflowerblue;
-  stroke: black;
+  stroke: #FFFFFF;
   stroke-width: 0.5;
+  fill: #DF5B5B;
+  fill-opacity: 0.5;
 }
 
 .dot:hover {
-  fill: maroon;
-  r: 7;
+  stroke: #000000;
 }
+
+.country {
+  fill: #DDDDDD;
+}
+
