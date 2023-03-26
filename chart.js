@@ -9,7 +9,7 @@ async function drawChart() {
   const width = 1050
   let dimensions = {
     width: width,
-    height: width * 0.6,
+    height: width * 0.52,
     margin: {
       top: 20,
       right: 20,
@@ -45,7 +45,7 @@ async function drawChart() {
 
   // draw data
   const projection = d3.geoMercator()
-    .scale(200)
+    .scale(160)
     .translate([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2]);
   const path = d3.geoPath()
     .projection(projection)

@@ -52,5 +52,7 @@ header {
 
 .country {
   fill: #DDDDDD;
+  stroke: black;
+  stroke-width: 0.5;
 }
 
