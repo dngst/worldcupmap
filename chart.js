@@ -30,6 +30,7 @@ async function drawChart() {
     .append("svg")
       .attr("width", dimensions.width)
       .attr("height", dimensions.height)
+      .on("click", reset)
 
   let bounds = wrapper.append("g")
     .style("transform", `translate(${
@@ -49,13 +50,16 @@ async function drawChart() {
     .translate([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2]);
   const path = d3.geoPath()
     .projection(projection)
-  const map = bounds.selectAll("path")
+  const map = bounds.append("g")
+
+  const countries = map.selectAll("path")
     .data(topojson.feature(world, world.objects.countries).features)
     .enter().append("path")
-      .attr("d", path)
       .attr("class", "country")
+      .on("click", clicked)
+      .attr("d", path)
 
-  bounds.selectAll("circle")
+  const circles = bounds.selectAll("circle")
     .data(dataset)
     .enter().append("circle")
       .attr("cx", d => projection([d.long, d.lat])[0])
@@ -71,7 +75,7 @@ async function drawChart() {
     .attr("class", "tooltip")
 
   function onMouseEnter() {
-    d = d3.select(this).datum()
+    let d = d3.select(this).datum()
     tooltip.select("#teams")
       .text(`${d.team1} vs ${d.team2} (${d.goals})`)
     tooltip.select("#attendance")
@@ -91,6 +95,43 @@ async function drawChart() {
   function onMouseLeave() {
     tooltip.style("opacity", 0)
   }
+
+  function clicked(event, d) {
+    const [[x0, y0], [x1, y1]] = path.bounds(d)
+    event.stopPropagation()
+    countries.transition().style("fill", null)
+    d3.select(this).transition().style("fill", "#5C95FF")
+    wrapper.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity
+        .translate(dimensions.boundedWidth / 2, dimensions.boundedHeight / 2)
+        .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / dimensions.boundedWidth, (y1 - y0) / dimensions.boundedHeight)))
+        .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+      d3.pointer(event, wrapper.node())
+    )
+  }
+
+  function reset() {
+    countries.transition().style("fill", null)
+    wrapper.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity,
+      d3.zoomTransform(wrapper.node()).invert([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2])
+    )
+  }
+
+  // zoom
+  const zoom = d3.zoom()
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed)
+
+  function zoomed(event) {
+    const {transform} = event
+    map.attr("transform", transform)
+    circles.attr("transform", transform)
+  }
+
+  wrapper.call(zoom)
 }
 
 drawChart()
