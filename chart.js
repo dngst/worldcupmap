@@ -3,7 +3,7 @@ async function drawChart() {
   const dataset = await d3.tsv("world_cup_geo.tsv")
   const world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json")
 
-  attendanceAccessor = d => +d.attendance
+  const attendanceAccessor = d => +d.attendance
 
   // create chart dimensions
   const width = 1050
@@ -47,7 +47,7 @@ async function drawChart() {
   // draw data
   const projection = d3.geoMercator()
     .scale(160)
-    .translate([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2]);
+    .translate([dimensions.boundedWidth / 2, dimensions.boundedHeight / 2])
   const path = d3.geoPath()
     .projection(projection)
   const map = bounds.append("g")
@@ -64,7 +64,9 @@ async function drawChart() {
     .enter().append("circle")
       .attr("cx", d => projection([d.long, d.lat])[0])
       .attr("cy", d => projection([d.long, d.lat])[1])
-      .on("mouseenter", onMouseEnter)
+      .on("mouseenter", function(e, datum) {
+        onMouseEnter(datum)
+      })
       .on("mousemove", onMouseMove)
       .on("mouseleave", onMouseLeave)
       .attr("class", "dot")
@@ -74,8 +76,7 @@ async function drawChart() {
   const tooltip = d3.select("#tooltip")
     .attr("class", "tooltip")
 
-  function onMouseEnter() {
-    let d = d3.select(this).datum()
+  function onMouseEnter(d) {
     tooltip.select("#teams")
       .text(`${d.team1} vs ${d.team2} (${d.goals})`)
     tooltip.select("#attendance")
