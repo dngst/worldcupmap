@@ -80,6 +80,8 @@ async function drawChart() {
       .text(`Year: ${d.year}`)
     tooltip.select("#stadium")
       .text(`Stadium: ${d.stadium}`)
+    tooltip.select("#home")
+      .text(`Home: ${d.home}`)
     tooltip.style("opacity", 0.9)
   }
 
