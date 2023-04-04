@@ -39,11 +39,6 @@ async function drawChart() {
       dimensions.margin.top
     }px)`)
 
-  // create scales
-  const attendanceScale = d3.scaleLinear()
-    .domain(d3.extent(dataset, attendanceAccessor))
-    .range([3, 30])
-
   // draw data
   const projection = d3.geoMercator()
     .scale(160)
@@ -70,7 +65,7 @@ async function drawChart() {
       .on("mousemove", onMouseMove)
       .on("mouseleave", onMouseLeave)
       .attr("class", "dot")
-      .attr("r", d => attendanceScale(attendanceAccessor(d)))
+      .attr("r", 5)
 
   // set up interactions
   const tooltip = d3.select("#tooltip")
