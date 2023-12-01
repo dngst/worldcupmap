@@ -51,10 +51,13 @@ header {
   stroke: #000000;
 }
 
-.country {
+.country, .country:hover {
   fill: #DDDDDD;
   stroke: #DF5B5B;
   stroke-width: 0.5;
   cursor: pointer;
 }
 
+.country:hover {
+  fill: #5C95FF;
+}
